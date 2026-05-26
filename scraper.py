@@ -574,4 +574,5 @@ async def main():
     print(f"FILES: {OUTPUT_CSV}  /  {OUTPUT_XLSX}")
 
 
-await main()
+if __name__ == "__main__":
+    asyncio.run(main())
