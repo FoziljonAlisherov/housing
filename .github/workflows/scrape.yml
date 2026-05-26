@@ -1,4 +1,4 @@
-name: OLX Scraper
+name: Daily OLX Scraper
 
 on:
   workflow_dispatch:
