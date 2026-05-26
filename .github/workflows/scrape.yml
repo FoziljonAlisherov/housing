@@ -1,43 +1,53 @@
-name: Daily OLX Scraper
+name: OLX Scraper
 
 on:
-  # schedule:
-  #   # 09:55 Tashkent time = 04:55 UTC (UTC+5)
-  #   - cron: "0 3 * * *"
   workflow_dispatch:
 
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    timeout-minutes: 120
 
     steps:
+      # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: master
-          
-      - name: List files
-        run: ls -R
 
-      - name: Set up Python
+      # Setup Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
+      # Install dependencies
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
-          pip install requests beautifulsoup4 pandas lxml
+          python -m pip install --upgrade pip
+          pip install pandas playwright openpyxl
 
+      # Install Playwright browser
+      - name: Install Chromium
+        run: |
+          playwright install chromium
+
+      # Show repository files (debug)
+      - name: Show files
+        run: ls -R
+
+      # Run scraper
       - name: Run scraper
         run: python scraper.py
 
-      - name: Commit new data
-        run: |
-          git config --local user.email "f.alisherov@newuu.uz"
-          git config --local user.name "FoziljonAlisherov"
-          git add data/housing_ads.csv
-          git diff --cached --quiet || git commit -m "chore: scrape OLX housing ads $(date -u +'%Y-%m-%d')"
-          git push
+      # Upload CSV
+      - name: Upload CSV
+        uses: actions/upload-artifact@v4
+        with:
+          name: olx-csv
+          path: olx_scraped_v2.csv
+
+      # Upload Excel
+      - name: Upload Excel
+        uses: actions/upload-artifact@v4
+        with:
+          name: olx-excel
+          path: olx_scraped_v2.xlsx
