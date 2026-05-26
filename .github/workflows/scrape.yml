@@ -1,9 +1,9 @@
 name: Daily OLX Scraper
 
 on:
-  schedule:
-    # 09:55 Tashkent time = 04:55 UTC (UTC+5)
-    - cron: "0 3 * * *"
+  # schedule:
+  #   # 09:55 Tashkent time = 04:55 UTC (UTC+5)
+  #   - cron: "0 3 * * *"
   workflow_dispatch:
 
 jobs:
