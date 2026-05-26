@@ -17,6 +17,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: master
+          
+      - name: List files
+        run: ls -la
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -29,7 +32,7 @@ jobs:
           pip install requests beautifulsoup4 pandas lxml
 
       - name: Run scraper
-        run: python housing/scraper.py
+        run: python scraper.py
 
       - name: Commit new data
         run: |
