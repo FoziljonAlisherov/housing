@@ -27,7 +27,7 @@ jobs:
           pip install requests beautifulsoup4 pandas lxml
 
       - name: Run scraper
-        run: python scraper.py
+        run: python housing/scraper.py
 
       - name: Commit new data
         run: |
