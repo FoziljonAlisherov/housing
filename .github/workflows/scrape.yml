@@ -1,0 +1,38 @@
+name: Daily OLX Scraper
+
+on:
+  schedule:
+    # 09:55 Tashkent time = 04:55 UTC (UTC+5)
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests beautifulsoup4 pandas lxml
+
+      - name: Run scraper
+        run: python scraper.py
+
+      - name: Commit new data
+        run: |
+          git config --local user.email "f.alisherov@newuu.uz"
+          git config --local user.name "FoziljonAlisherov"
+          git add data/housing_ads.csv
+          git diff --cached --quiet || git commit -m "chore: scrape OLX housing ads $(date -u +'%Y-%m-%d')"
+          git push
